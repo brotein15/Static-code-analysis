@@ -1,4 +1,4 @@
-name: "CodeQL Advanced - Custom Build"
+name: "CodeQL - Manual Build"
 
 on:
   push:
@@ -10,50 +10,21 @@ on:
 
 jobs:
   analyze:
-    name: Analyze C/C++
+    name: Analyze
     runs-on: ubuntu-latest
     permissions:
       security-events: write
-      packages: read
-      actions: read
       contents: read
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set up build environment
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y g++ cmake make  # Install required build tools
-
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
-        languages: c-cpp  # Analyzing C/C++ code
-        build-mode: manual  # Disable autobuild
-
-    # Custom build commands - REPLACE THESE WITH YOUR ACTUAL BUILD COMMANDS
-    - name: Build project
-      run: |
-        echo "Starting C++ build process..."
-        
-        # Example build commands - modify these for your project
-        # Option 1: Simple g++ compilation
-        g++ -o myapp src/*.cpp -Iinclude
-        
-        # Option 2: CMake build
-        # mkdir -p build
-        # cd build
-        # cmake ..
-        # make
-        
-        # Option 3: Makefile build
-        # make all
-        
-        echo "Build completed successfully"
+        languages: c-cpp
+        build-mode: none  # Completely disables build tracing
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
-      with:
-        category: "/language:c-cpp"
