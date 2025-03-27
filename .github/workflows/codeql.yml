@@ -1,12 +1,10 @@
-name: "CodeQL - Manual Build"
+name: "CodeQL Analysis"
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  schedule:
-    - cron: '38 2 * * 1'
 
 jobs:
   analyze:
@@ -20,11 +18,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Set up build environment
+      run: sudo apt-get update && sudo apt-get install -y g++
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
-        languages: c-cpp
-        build-mode: none  # Completely disables build tracing
+        languages: cpp
+        build-mode: manual
+
+    - name: Build with custom commands
+      run: |
+        g++ -o program code.cpp  # This compiles your single file
+        ./program  # Optional: Run the program to verify it works
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
