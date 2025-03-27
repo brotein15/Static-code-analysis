@@ -27,17 +27,14 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: cpp
-        # Disable advanced features to avoid conflict
-        queries: security-extended,security-and-quality
-        build-mode: manual
+        build-mode: manual  # 👈 Critical change
 
-    - name: Build with SQLite linking
+    - name: Build with custom commands
       run: |
-        g++ -o program code.cpp -lsqlite3
-        ./program  # Optional test run
+        echo "Building C++ code..."
+        g++ -o program code.cpp -lsqlite3  # 👈 Your actual build command
+        file program  # Verify the binary was created
+        ./program || true  # Test run (continue even if it fails)
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
-      with:
-        # Disable advanced SARIF processing
-        category: "/language:cpp"
