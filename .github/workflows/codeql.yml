@@ -18,8 +18,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set up build environment
-      run: sudo apt-get update && sudo apt-get install -y g++
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y g++ libsqlite3-dev
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
@@ -27,10 +29,10 @@ jobs:
         languages: cpp
         build-mode: manual
 
-    - name: Build with custom commands
+    - name: Build with SQLite linking
       run: |
-        g++ -o program code.cpp  # This compiles your single file
-        ./program  # Optional: Run the program to verify it works
+        g++ -o program code.cpp -lsqlite3
+        ./program  # Optional test run
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
