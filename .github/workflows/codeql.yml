@@ -27,6 +27,8 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: cpp
+        # Disable advanced features to avoid conflict
+        queries: security-extended,security-and-quality
         build-mode: manual
 
     - name: Build with SQLite linking
@@ -36,3 +38,6 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
+      with:
+        # Disable advanced SARIF processing
+        category: "/language:cpp"
